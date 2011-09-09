@@ -6,7 +6,7 @@
 		'pi_name' => 'CP Facebook',
 		'pi_version' => '1.0',
 		'pi_author' => 'Caleb Pierce',
-		'pi_author_url' => 'http://insidenewcity.com/team/caleb',
+		'pi_author_url' => 'http://calebpierce.com',
 		'pi_description' => 'Uses the Facebook SDK to pull a wall feed in JSON format.',
 		'pi_usage' => Cp_facebook::usage()
 	);
@@ -97,9 +97,7 @@
 			// get the optional params
 			$temp_types = explode(',', $this->EE->TMPL->fetch_param('exclude_post_types'));
 			$this->exclude_post_types = $temp_types;
-			
 			$this->jsonp_callback = $this->EE->TMPL->fetch_param('jsonp_callback');
-			
 			$this->max_posts = ($this->EE->TMPL->fetch_param('limit') ? $this->EE->TMPL->fetch_param('limit') : 1); // limit posts to 1 or "limit" param
 
 			// check for the two required params :: appId and secret
@@ -135,6 +133,7 @@
 
 			try { // request JSON feed and attempt to parse result
 				
+				// TODO - replace file_get_contents() with $facebook->api()
 				$raw_feed = file_get_contents('https://graph.facebook.com/' . $this->user_id . '/feed?access_token=' . $facebook->getAccessToken());
 				$this->wall_feed = json_decode($raw_feed);
 				
@@ -178,7 +177,7 @@
 				(optional) jsonp_callback: a JSONP callback function to wrap the resulting JSON in
 			
 			Example:
-			{exp:cp_facebook:get_wall_feed app_id="fbApplicationId" secret="fbSecret" user_id="fbUserId" limit="5"}
+			{exp:cp_facebook:get_wall_feed app_id="fbApplicationId" secret="fbSecret" user_id="fbUserId" limit="5" exclude_post_types="photo"}
 			
 		<?php
 			$buffer = ob_get_contents();
@@ -189,9 +188,5 @@
 		} // usage		
 				
 	} //class
-		
-
-	/* End of file pi.cp_facebook.php */ 
-	/* Location: ./manage/expressionengine/third_party/cp_facebook/pi.cp_facebook.php */
 
 ?>
